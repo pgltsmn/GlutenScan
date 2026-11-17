@@ -1,4 +1,5 @@
 import SwiftUI
+import Vision
 import VisionKit
 
 /// Hosts a DataScannerViewController and restarts it whenever its view comes
@@ -50,7 +51,9 @@ struct ScannerView: UIViewControllerRepresentable {
 
     func makeUIViewController(context: Context) -> ScannerContainerController {
         let scanner = DataScannerViewController(
-            recognizedDataTypes: [.barcode()],
+            // Product barcodes only, so QR codes on packaging are ignored.
+            // UPC-A codes are read as EAN-13 with a leading 0.
+            recognizedDataTypes: [.barcode(symbologies: [.ean13, .ean8, .upce])],
             qualityLevel: .balanced,
             recognizesMultipleItems: false,
             isHighFrameRateTrackingEnabled: false,
